@@ -65,7 +65,7 @@ Endurance 的定位是在前台与下游 Agent 之间放一层 **super-agent**�
 
 ### 1. 对接前台任务
 
-Endurance 通过 WebSocket 接收任务，并把执行过程实时回传。一次任务对应一个 `session_id`；连接断开后实例会保留一段时间，允许前台重连恢复。
+Endurance 通过 WebSocket 接收任务，并把执行过程实时回传。一次会话对应一个 `session_id`，任务在会话内通过 `chat/request` 提交；连接断开后实例会保留一段时间，允许前台重连恢复。
 
 ### 2. 理解与拆解任务
 
@@ -177,7 +177,7 @@ sequenceDiagram
 ### 使用步骤（接入方视角）
 
 1. **部署 Endurance 服务**：作为常驻进程运行，配置 LLM Provider 与可用的 Tool / Skill（待实现）。
-2. **前台建立连接**：通过 WebSocket 连入，为一次任务创建或复用一个 `session_id`。
+2. **前台建立连接**：通过 WebSocket 连入，为一次会话创建或复用一个 `session_id`。
 3. **提交任务**：发送 `chat/request`，随后消费 `chat/delta`、`chat/stream` 与 `event/*` 帧更新界面。
 4. **接收结果**：`chat/stream` 以 `done: true` 标记一次 LLM 调用结束，最终答复通过 `chat/delta` 流式呈现；`error` 帧表示失败。
 5. **断线恢复**：携带同一 `session_id` 重连，恢复未完成的会话。

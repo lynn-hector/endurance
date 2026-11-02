@@ -17,7 +17,6 @@ Endurance 是一个以 Go 开发的 Agent 运行时，但这只是它的实现�
 - [接入与使用约定](#接入与使用约定)
 - [仓库结构](#仓库结构)
 - [开发状态与路线图](#开发状态与路线图)
-- [相关文档](#相关文档)
 - [参与开发](#参与开发)
 - [许可证](#许可证)
 
@@ -121,7 +120,7 @@ flowchart LR
     C -->|chat/stream, event 事件| F
 ```
 
-分层与模块边界（Transport、Protocol、Gateway、Core、Subagent、Tool、Skill、Context、Memory、Provider）的完整定义见架构设计文档。
+分层与模块边界覆盖 Transport、Protocol、Gateway、Core、Subagent、Tool、Skill、Context、Memory、Provider。
 
 **依赖原则**：外层依赖内核，内核不感知外层；内核模块之间通过 `interface` 调用；Hook 作为横切关注点显式接入主循环。
 
@@ -224,7 +223,7 @@ sequenceDiagram
 
 ### 开发与运行
 
-实现完成后，典型启动方式为配置 LLM Provider 后启动服务，前台通过 WebSocket 接入；架构设计文档描述了 MVP 的模块顺序：
+实现完成后，典型启动方式为配置 LLM Provider 后启动服务，前台通过 WebSocket 接入。MVP 的模块落地顺序为：
 
 1. WebSocket Transport → Protocol → Agent Core → Context Manager → LLM Provider（OpenAI 兼容）→ 基础 Tool（`bash`、`read_file` 等）。
 2. 延后：Skill 高级工作流、Memory 向量检索、Subagent 的 DAG 分解、复杂 Hook。
@@ -236,8 +235,6 @@ sequenceDiagram
 ```text
 .
 ├── README.md                          # 项目定位与用法（本文）
-├── docs/superpowers/specs/
-│   └── 2026-04-02-endurance-agent-architecture-design.md   # 架构设计文档
 └── LICENSE                            # Apache License 2.0
 ```
 
@@ -253,16 +250,12 @@ sequenceDiagram
 - [ ] Skill 配置式加载与 Hook 机制
 - [ ] Memory 远端异步同步、向量检索（后续）
 
-## 相关文档
-
-- [Endurance Agent 架构设计文档](docs/superpowers/specs/2026-04-02-endurance-agent-architecture-design.md)
-
 ## 参与开发
 
-- 先阅读架构设计文档，确认要扩展的层次（Transport / Core / Tool / Skill / Hook）。
+- 扩展前先确认要扩展的层次（Transport / Core / Tool / Skill / Hook）。
 - 遵循模块依赖原则：内核不感知外层，模块之间通过接口调用。
 - 新增 Tool 时提供明确的输入输出 schema，并注册到 `ToolRegistry`。
-- 涉及调度行为的变化，请同时更新设计文档与本文档中受影响的约定。
+- 涉及调度行为的变化，请同步更新本文档中受影响的约定。
 
 ## 许可证
 
